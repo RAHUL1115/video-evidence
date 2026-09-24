@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Record of Evidence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f3f4f1;
+    --sheet: #fbfbf9;
+    --ink: #1c1f26;
+    --ink-2: #4a4f5c;
+    --rule: #d7d9d3;
+    --rule-strong: #1c1f26;
+    --stamp: #3d3a9e;
+    --stamp-soft: #e6e5f4;
+    --focus: #3d3a9e;
+    --shadow: 0 1px 2px rgb(28 31 38 / 0.06), 0 8px 24px rgb(28 31 38 / 0.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #12141a;
+      --sheet: #191c23;
+      --ink: #e8e9ec;
+      --ink-2: #a6abb8;
+      --rule: #2c303a;
+      --rule-strong: #e8e9ec;
+      --stamp: #a9a6ff;
+      --stamp-soft: #262545;
+      --focus: #a9a6ff;
+      --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px rgb(0 0 0 / 0.3);
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scrollbar-color: var(--rule) var(--paper); }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 16px/1.6 "Public Sans", system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--stamp); color: var(--sheet); }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+  a { color: var(--stamp); text-underline-offset: 3px; text-decoration-thickness: 1px; }
+
+  .sheet {
+    max-width: 1000px;
+    margin: 32px auto 48px;
+    background: var(--sheet);
+    box-shadow: var(--shadow);
+    padding: 56px 64px 48px;
+  }
+  h1, h2 { font-family: "Source Serif 4", Georgia, serif; font-weight: 600; letter-spacing: -0.02em; text-wrap: balance; }
+  h1 { font-size: clamp(2rem, 4.5vw, 2.75rem); line-height: 1.1; margin: 0; }
+  h2 { font-size: 1.5rem; line-height: 1.2; margin: 0; }
+
+  .masthead { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; padding-bottom: 20px; border-bottom: 2px solid var(--rule-strong); }
+  .masthead p { margin: 8px 0 0; color: var(--ink-2); max-width: 52ch; }
+  .masthead dl { margin: 0; display: grid; grid-template-columns: auto auto; gap: 2px 16px; font-size: 0.875rem; white-space: nowrap; }
+  .masthead dt { color: var(--ink-2); }
+  .masthead dd { margin: 0; font-weight: 500; text-align: right; }
+
+  /* Exhibit index */
+  table.index { width: 100%; border-collapse: collapse; margin: 32px 0 8px; font-size: 0.9375rem; }
+  .index th { text-align: left; font-weight: 500; font-size: 0.8125rem; color: var(--ink-2); padding: 0 12px 8px 0; border-bottom: 1px solid var(--rule); }
+  .index td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .index td:last-child, .index th:last-child { text-align: right; padding-right: 0; }
+  .index a { font-weight: 500; }
+
+  /* Stamp label — the exhibit mark used on filed evidence */
+  .stamp {
+    display: inline-block;
+    font: 600 0.8125rem/1 "Public Sans", sans-serif;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--stamp);
+    border: 2px solid var(--stamp);
+    border-radius: 3px;
+    padding: 6px 8px 5px;
+    transform: rotate(-2deg);
+  }
+
+  section.exhibit { padding-top: 56px; }
+  .exhibit-head { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+  .exhibit-body { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 40px; align-items: start; }
+
+  .player { background: #000; border-radius: 4px; overflow: hidden; }
+  .player video { display: block; width: 100%; aspect-ratio: 9 / 16; max-height: 78vh; background: #000; }
+
+  .facts { margin: 0 0 24px; display: grid; grid-template-columns: max-content 1fr; gap: 8px 20px; font-size: 0.9375rem; }
+  .facts dt { color: var(--ink-2); }
+  .facts dd { margin: 0; }
+  .hash { font-size: 0.75rem; color: var(--ink-2); word-break: break-all; line-height: 1.5; }
+
+  h3 { font-size: 0.9375rem; font-weight: 600; margin: 0 0 8px; }
+  ol.moments { list-style: none; margin: 0 0 28px; padding: 0; border-top: 1px solid var(--rule); }
+  .moments li { border-bottom: 1px solid var(--rule); }
+  .moments button {
+    all: unset; box-sizing: border-box; cursor: pointer; width: 100%;
+    display: grid; grid-template-columns: 56px 1fr; gap: 12px; padding: 10px 4px;
+    transition: background-color 160ms ease-out;
+  }
+  .moments button:hover { background: var(--stamp-soft); }
+  .moments button:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+  .moments .tc { color: var(--stamp); font-weight: 600; }
+
+  .btn {
+    appearance: none; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 10px;
+    font: 600 0.9375rem/1 "Public Sans", sans-serif;
+    color: var(--sheet); background: var(--stamp);
+    border: 0; border-radius: 4px; padding: 13px 18px;
+    transition: filter 160ms ease-out;
+  }
+  .btn:hover { filter: brightness(1.12); }
+  .btn:disabled { cursor: default; filter: saturate(0.4) opacity(0.7); }
+  .btn { text-decoration: none; }
+  .btn svg { width: 18px; height: 18px; flex: none; }
+  .btn.secondary { color: var(--stamp); background: none; box-shadow: inset 0 0 0 1.5px var(--stamp); }
+
+  .progress { margin-top: 14px; height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; }
+  .progress > div { height: 100%; background: var(--stamp); transform: scaleX(0); transform-origin: left; transition: transform 240ms cubic-bezier(0.16, 1, 0.3, 1); }
+  .dlstatus { font-size: 0.875rem; color: var(--ink-2); margin: 8px 0 0; min-height: 1.4em; }
+  .err { color: #b3261e; font-size: 0.875rem; margin: 10px 0 0; }
+  @media (prefers-color-scheme: dark) { .err { color: #ff8a80; } }
+
+  .audio-body { display: grid; grid-template-columns: minmax(0, 380px) minmax(0, 1fr); gap: 40px; align-items: start; }
+  audio { width: 100%; accent-color: var(--stamp); }
+  .audio-card { border: 1px solid var(--rule); border-radius: 4px; padding: 20px; }
+  .audio-card p { margin: 0 0 14px; font-weight: 500; }
+
+  section.summary { padding-top: 48px; }
+  .summary h2 { margin-bottom: 8px; }
+  .lede { margin: 0 0 24px; color: var(--ink-2); max-width: 70ch; }
+  .facts.policy { margin-bottom: 28px; }
+  .table-scroll { overflow-x: auto; }
+  table.compare { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 0.9375rem; }
+  .compare thead th { text-align: left; font-weight: 600; padding: 0 16px 10px 0; border-bottom: 2px solid var(--rule-strong); vertical-align: bottom; }
+  .compare .src { display: block; font-weight: 400; font-size: 0.8125rem; color: var(--ink-2); }
+  .compare tbody th { text-align: left; font-weight: 500; color: var(--ink-2); width: 24%; }
+  .compare tbody th, .compare td { padding: 12px 16px 12px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  .compare td { width: 38%; }
+  .compare strong { font-weight: 600; }
+  .compare tr.total th, .compare tr.total td { border-bottom: 2px solid var(--rule-strong); font-weight: 600; color: var(--ink); }
+  .tclink {
+    all: unset; cursor: pointer; white-space: nowrap;
+    color: var(--stamp); font-weight: 600; font-size: 0.8125rem;
+    padding: 1px 6px; margin-left: 2px; border-radius: 3px; background: var(--stamp-soft);
+    transition: filter 160ms ease-out;
+  }
+  .tclink:hover { filter: brightness(0.95); }
+  .tclink:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .note { margin: 12px 0 0; font-size: 0.8125rem; color: var(--ink-2); max-width: 75ch; }
+  .moments span:last-child { text-wrap: pretty; }
+
+  footer { margin-top: 64px; padding-top: 16px; border-top: 2px solid var(--rule-strong); font-size: 0.8125rem; color: var(--ink-2); }
+  footer p { margin: 0 0 6px; max-width: 75ch; }
+
+  @media (max-width: 760px) {
+    .sheet { margin: 0; padding: 28px 16px 32px; box-shadow: none; }
+    .masthead { flex-direction: column; align-items: flex-start; }
+    .masthead dd { text-align: left; }
+    .exhibit-body, .audio-body { grid-template-columns: 1fr; gap: 24px; }
+    .player video { max-height: 72vh; }
+    .index .hide-sm { display: none; }
+    section.exhibit { padding-top: 44px; }
+    .btn { width: 100%; justify-content: center; }
+    table.compare { min-width: 0; }
+    .compare thead { display: none; }
+    .compare tr { display: block; padding: 14px 0; border-bottom: 1px solid var(--rule); }
+    .compare tr.total { border-bottom: 2px solid var(--rule-strong); }
+    .compare tbody th, .compare td { display: block; width: auto; padding: 0; border: 0; }
+    .compare tbody th { color: var(--ink); font-weight: 600; margin-bottom: 8px; }
+    .compare td { margin-top: 6px; }
+    .compare td::before { display: block; font-size: 0.75rem; font-weight: 500; color: var(--ink-2); }
+    .compare td:nth-of-type(1)::before { content: "Told on the call (Exhibit B)"; }
+    .compare td:nth-of-type(2)::before { content: "Policy schedule (Exhibit A)"; }
+    .compare tr.total th, .compare tr.total td { border: 0; }
+  }
+</style>
+</head>
+<body>
+<!--
+THESIS: A filed evidence record, not a media page — exhibits indexed, stamped, timed and fingerprinted like a court/insurer submission; refuses the "hero video + big button" layout.
+OWN-WORLD: Cool office paper sheet on grey desk; ink-black rules; rubber-stamp violet-blue for exhibit marks, timecodes and actions; Public Sans (government document face) + Source Serif 4 headings; tabular numerals.
+STORY: The official sees what was submitted, when it was recorded, jumps to the key moments, and can download and verify each file.
+FIRST VIEWPORT: Masthead title with record facts at right, exhibit index table beneath; Exhibit A stamp and player begin below.
+FORM: Pinned by user (formal case file); no concept roll.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+-->
+<main class="sheet">
+  <header class="masthead">
+    <div>
+      <h1>Record of Evidence</h1>
+      <p>Two recordings submitted for review. Each exhibit can be played here and downloaded as the original file.</p>
+    </div>
+    <dl>
+      <dt>Exhibits</dt><dd>2</dd>
+      <dt>Page prepared</dt><dd>24 Sep 2026</dd>
+    </dl>
+  </header>
+
+  <table class="index">
+    <thead>
+      <tr><th>Exhibit</th><th>Description</th><th class="hide-sm">Recorded</th><th>Length</th></tr>
+    </thead>
+    <tbody>
+      <tr><td><a href="#exhibit-a">A</a></td><td>Screen recording of phone</td><td class="hide-sm">12 Sep 2026, 11:31</td><td>15:21</td></tr>
+      <tr><td><a href="#exhibit-b">B</a></td><td>Phone call recording</td><td class="hide-sm">11 Jul 2026, 12:24</td><td>1:29</td></tr>
+    </tbody>
+  </table>
+
+  <section class="summary" aria-labelledby="s-title">
+    <h2 id="s-title">Summary of returns</h2>
+    <p class="lede">What the caller in Exhibit B said the policy would pay, set against the policy schedule shown on screen in Exhibit A. Timecodes link to the exact point in each recording.</p>
+
+    <dl class="facts policy">
+      <dt>Plan</dt><dd>ICICI Pru GIFT Pro (non-participating, non-linked savings plan)</dd>
+      <dt>Policy no.</dt><dd>L1093134, accepted 7 Aug 2026</dd>
+      <dt>Premium</dt><dd>₹1,02,000 a year for 7 years (last due 7 Aug 2032), ₹7,14,000 in total</dd>
+      <dt>Death cover</dt><dd>₹10,85,280</dd>
+    </dl>
+
+    <div class="table-scroll">
+      <table class="compare">
+        <thead>
+          <tr><th></th><th>Told on the call <span class="src">Exhibit B</span></th><th>Policy schedule <span class="src">Exhibit A, <button type="button" class="tclink" data-media="v" data-t="382">6:22</button></span></th></tr>
+        </thead>
+        <tbody>
+          <tr><th>At the end of year 7 (Aug 2033)</th><td><strong>₹13,56,600</strong> total amount <button type="button" class="tclink" data-media="a" data-t="39">0:39</button></td><td><strong>₹6,63,317</strong> Maturity Sum Assured, 7 Aug 2033</td></tr>
+          <tr><th>Yearly income</th><td>₹51,000 pension, optional <button type="button" class="tclink" data-media="a" data-t="44">0:44</button></td><td>₹51,235 a year for 5 years, from 7 Aug 2034 (Level Guaranteed Income)</td></tr>
+          <tr><th>Premiums returned (₹7,14,000)</th><td>“After that, your principal of ₹7,14,000 is returned” <button type="button" class="tclink" data-media="a" data-t="49">0:49</button></td><td>MoneyBack Benefit of ₹7,14,000, paid <strong>7 Aug 2038</strong></td></tr>
+          <tr><th>Cashback</th><td>2.46%, released within 30 days <button type="button" class="tclink" data-media="a" data-t="64">1:04</button></td><td>Not listed in the schedule</td></tr>
+          <tr class="total"><th>Total paid out</th><td>—</td><td>₹16,33,492 between 2033 and 2038</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">Figures in the right column are read from the policy schedule visible in Exhibit A. Summaries of the recordings are translated from Hindi; please use the timecodes to hear the original words.</p>
+  </section>
+
+  <section class="exhibit" id="exhibit-a" aria-labelledby="a-title">
+    <div class="exhibit-head">
+      <span class="stamp">Exhibit A</span>
+      <h2 id="a-title">Screen recording</h2>
+    </div>
+    <div class="exhibit-body">
+      <div>
+        <div class="player"><video id="v" controls playsinline preload="metadata"></video></div>
+        <p class="err" id="err" hidden></p>
+      </div>
+      <div>
+        <dl class="facts">
+          <dt>Recorded</dt><dd>12 Sep 2026, 11:31 – 11:47</dd>
+          <dt>Length</dt><dd>15 min 21 s</dd>
+          <dt>File</dt><dd>MP4 (H.264), 1080 × 1920, 486 MB</dd>
+          <dt>SHA-256</dt><dd class="hash">15b485851341a73fce9ddcbaebe2b78bcf1855326e004cb3c4c2280f477f9505</dd>
+        </dl>
+
+        <h3>Key moments</h3>
+        <ol class="moments">
+          <li><button type="button" data-media="v" data-t="0"><span class="tc">0:00</span><span>Date and time stated on camera (12 Sep, 11:31)</span></button></li>
+          <li><button type="button" data-media="v" data-t="16"><span class="tc">0:16</span><span>Contact profile of the agent who sold the policy</span></button></li>
+          <li><button type="button" data-media="v" data-t="20"><span class="tc">0:20</span><span>WhatsApp call to the agent placed on speaker</span></button></li>
+          <li><button type="button" data-media="v" data-t="82"><span class="tc">1:22</span><span>Policy schedule read: maturity date 7 Aug 2033</span></button></li>
+          <li><button type="button" data-media="v" data-t="111"><span class="tc">1:51</span><span>Guaranteed income of ₹51,235 discussed</span></button></li>
+          <li><button type="button" data-media="v" data-t="140"><span class="tc">2:20</span><span>About ₹6.63 lakh said to be paid in 2033</span></button></li>
+          <li><button type="button" data-media="v" data-t="252"><span class="tc">4:12</span><span>Two choices explained: take the yearly income from 2034, or opt out</span></button></li>
+          <li><button type="button" data-media="v" data-t="382"><span class="tc">6:22</span><span>Policy schedule clearly visible; opting out discussed as paying the ₹7,14,000 in 2033</span></button></li>
+          <li><button type="button" data-media="v" data-t="433"><span class="tc">7:13</span><span>Option A: ₹6.63 lakh + ₹7.14 lakh in 2033, about ₹13.77 lakh</span></button></li>
+          <li><button type="button" data-media="v" data-t="484"><span class="tc">8:04</span><span>Option B: ₹6.63 lakh + ₹51,000 × 5 + ₹7.14 lakh, about ₹16.32 lakh over 12 years</span></button></li>
+          <li><button type="button" data-media="v" data-t="792"><span class="tc">13:12</span><span>Confirmed that the yearly income starts one year after maturity</span></button></li>
+        </ol>
+
+        <button class="btn" id="dl" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
+          Download Exhibit A (486 MB)
+        </button>
+        <div class="progress" id="bar" hidden><div></div></div>
+        <p class="dlstatus" id="dlstatus" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="exhibit" id="exhibit-b" aria-labelledby="b-title">
+    <div class="exhibit-head">
+      <span class="stamp">Exhibit B</span>
+      <h2 id="b-title">Call recording</h2>
+    </div>
+    <div class="audio-body">
+      <div class="audio-card">
+        <p>Phone call, 11 Jul 2026</p>
+        <audio id="a" controls preload="metadata" src="audio/call-2026-07-11.m4a"></audio>
+      </div>
+      <div>
+        <h3>What the caller said</h3>
+        <ol class="moments">
+          <li><button type="button" data-media="a" data-t="9"><span class="tc">0:09</span><span>Introduces herself as a relationship manager from ICICI Prudential, calling to verify the scheme bought for ₹1,02,000</span></button></li>
+          <li><button type="button" data-media="a" data-t="22"><span class="tc">0:22</span><span>Premium of ₹1,02,000 to be paid for 7 years; maturity at the end of year 7</span></button></li>
+          <li><button type="button" data-media="a" data-t="39"><span class="tc">0:39</span><span>“The total amount you get at the end of the 7th year is ₹13,56,600”</span></button></li>
+          <li><button type="button" data-media="a" data-t="44"><span class="tc">0:44</span><span>Pension of ₹51,000 offered, optional and not mandatory</span></button></li>
+          <li><button type="button" data-media="a" data-t="49"><span class="tc">0:49</span><span>“After that, your principal of ₹7,14,000 is returned”</span></button></li>
+          <li><button type="button" data-media="a" data-t="53"><span class="tc">0:53</span><span>Policy to be issued; soft copy by email within 3 days, with the same table the manager explained on page 20</span></button></li>
+          <li><button type="button" data-media="a" data-t="64"><span class="tc">1:04</span><span>Cashback of 2.46% to be released on the website within 30 days</span></button></li>
+        </ol>
+        <dl class="facts">
+          <dt>Recorded</dt><dd>11 Jul 2026, 12:24</dd>
+          <dt>Length</dt><dd>1 min 29 s</dd>
+          <dt>File</dt><dd>M4A (AAC), 0.7 MB</dd>
+          <dt>SHA-256</dt><dd class="hash">f08d208781c39ad10b45e88071c2eabc3dd553b4363e1504e0732e73207c0c94</dd>
+        </dl>
+        <a class="btn secondary" href="audio/call-2026-07-11.m4a" download="exhibit-b-call-2026-07-11.m4a">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11"/><path d="m7 10 5 5 5-5"/><path d="M5 20h14"/></svg>
+          Download Exhibit B (0.7 MB)
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>Exhibit A joins two consecutive phone recordings made on 12 Sep 2026 (starting 11:31 and 11:42) with nothing removed. It has been rotated upright and compressed for delivery. Exhibit B is the original call recording file.</p>
+    <p>To check a downloaded file is unaltered, compare its SHA-256 value with the one shown above.</p>
+  </footer>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1/dist/hls.min.js"></script>
+<script>
+  const v = document.getElementById("v");
+  const src = "v/index.m3u8";
+  const fail = (msg) => { const e = document.getElementById("err"); e.textContent = "Playback error: " + msg; e.hidden = false; };
+  v.addEventListener("error", () => fail(v.error ? "media error " + v.error.code : "unknown"));
+  if (v.canPlayType("application/vnd.apple.mpegurl")) {
+    v.src = src; // Safari plays HLS natively
+  } else if (window.Hls && Hls.isSupported()) {
+    const hls = new Hls();
+    hls.on(Hls.Events.ERROR, (_, d) => { if (d.fatal) fail(d.type + " / " + d.details); });
+    hls.loadSource(src);
+    hls.attachMedia(v);
+  } else {
+    fail("streaming not supported in this browser");
+  }
+
+  document.querySelectorAll("[data-media][data-t]").forEach((b) => {
+    b.onclick = () => {
+      const m = document.getElementById(b.dataset.media);
+      m.currentTime = Number(b.dataset.t);
+      m.play();
+      m.scrollIntoView({ behavior: "smooth", block: "center" });
+    };
+  });
+
+  // The MP4 is stored as 24 MB byte chunks (Cloudflare Pages' per-file limit); rejoin them into the original file.
+  const CHUNKS = 20;
+  const TOTAL = 486129739;
+  const dl = document.getElementById("dl");
+  const bar = document.getElementById("bar");
+  const status = document.getElementById("dlstatus");
+  let received = 0;
+  const show = () => {
+    const pct = Math.round((received / TOTAL) * 100);
+    bar.firstElementChild.style.transform = `scaleX(${received / TOTAL})`;
+    status.textContent = `Downloading… ${pct}% (${Math.round(received / 1e6)} of 486 MB)`;
+  };
+  async function fetchChunk(i) {
+    const url = `dl/${String(i).padStart(2, "0")}.bin`;
+    for (let attempt = 1; ; attempt++) {
+      const before = received;
+      try {
+        const r = await fetch(url);
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        const reader = r.body.getReader();
+        const parts = [];
+        for (;;) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          parts.push(value);
+          received += value.length;
+          show();
+        }
+        return new Blob(parts);
+      } catch (e) {
+        received = before;
+        if (attempt >= 3) throw e;
+      }
+    }
+  }
+  dl.onclick = async () => {
+    dl.disabled = true;
+    bar.hidden = false;
+    received = 0;
+    show();
+    try {
+      const parts = [];
+      for (let i = 0; i < CHUNKS; i++) parts.push(await fetchChunk(i));
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(new Blob(parts, { type: "video/mp4" }));
+      a.download = "exhibit-a-screen-recording-2026-09-12.mp4";
+      a.click();
+      status.textContent = "Download complete. Check your Downloads folder.";
+    } catch (e) {
+      status.textContent = "Download stopped (" + e.message + "). Check your connection and press the button again.";
+    }
+    dl.disabled = false;
+  };
+</script>
+</body>
+</html>

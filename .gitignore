@@ -1,0 +1,5 @@
+# Large media is deployed to Cloudflare Pages but not stored in git
+public/v/
+public/dl/
+public/audio/
+.wrangler/
